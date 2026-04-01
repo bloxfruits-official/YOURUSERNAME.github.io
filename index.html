@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blox Fruits Event</title>
+
+<style>
+body{
+  background:#020617;
+  color:white;
+  font-family:Arial;
+  margin:0;
+  text-align:center;
+}
+
+.header{
+  background:#020617;
+  padding:20px;
+  border-bottom:1px solid #1e293b;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:bold;
+  color:#facc15;
+}
+
+.sub{
+  font-size:12px;
+  color:gray;
+}
+
+.card{
+  background:#0f172a;
+  padding:15px;
+  border-radius:12px;
+  margin:15px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  background:#22c55e;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  color:black;
+  font-weight:bold;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  margin-top:8px;
+}
+
+.correct{color:#4ade80}
+.wrong{color:#f87171}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="logo">🍍 BLOX FRUITS</div>
+  <div class="sub">Official Event Portal • Gamer Robot Inc.</div>
+</div>
+
+<div class="card">
+  ⚡ Limited-Time Event Quiz <br>
+  Complete to check your skill level!
+</div>
+
+<div id="login" class="card">
+  <input id="name" placeholder="Enter Player Name">
+  <input id="pass" placeholder="Event Access Code">
+  <button onclick="login()">Enter Event</button>
+</div>
+
+<div id="levels" class="hidden card">
+  <b>Select Difficulty</b>
+  <button onclick="start('easy')">Easy</button>
+  <button onclick="start('normal')">Normal</button>
+  <button onclick="start('hard')">Hard</button>
+</div>
+
+<div id="quiz"></div>
+<div id="result"></div>
+
+<script>
+const PASSWORD="event2026";
+
+let score=0, levelNow="";
+
+const quiz={
+easy:[
+ {q:"Which sea do players start in?",a:["first sea","sea 1"]},
+ {q:"Best fruit for travel?",a:["light"]}
+],
+normal:[
+ {q:"Fruit for walking on water?",a:["ice"]},
+ {q:"Sea where Mirage Island appears?",a:["third sea","sea 3"]}
+],
+hard:[
+ {q:"Sword used with Tushita for CDK?",a:["yama"]},
+ {q:"Fastest race in game?",a:["mink"]}
+]
+};
+
+function login(){
+  let p=document.getElementById("pass").value;
+  if(p!==PASSWORD){
+    alert("Invalid Event Code");
+    return;
+  }
+  document.getElementById("login").style.display="none";
+  document.getElementById("levels").classList.remove("hidden");
+}
+
+function start(lvl){
+  levelNow=lvl;
+  score=0;
+  document.getElementById("levels").classList.add("hidden");
+
+  let qDiv=document.getElementById("quiz");
+  qDiv.innerHTML="";
+
+  quiz[lvl].forEach((q,i)=>{
+    qDiv.innerHTML+=`
+    <div class="card">
+      <b>Q${i+1}. ${q.q}</b>
+      <input id="ans${i}">
+    </div>`;
+  });
+
+  qDiv.innerHTML+=`<button onclick="submit()">Submit</button>`;
+}
+
+function submit(){
+  let output="<h2>Result</h2>";
+
+  quiz[levelNow].forEach((q,i)=>{
+    let ans=document.getElementById("ans"+i).value.toLowerCase();
+
+    if(q.a.some(v=>ans.includes(v))){
+      score+=5;
+      output+=`<p class="correct">Q${i+1}: Correct ✔</p>`;
+    } else {
+      output+=`<p class="wrong">Q${i+1}: Wrong ❌</p>`;
+    }
+  });
+
+  document.getElementById("quiz").innerHTML="";
+
+  let msg="";
+  if(score>=10){
+    msg="🎉 You are eligible for special rewards!";
+  } else {
+    msg="⚠️ Try again to improve your score!";
+  }
+
+  document.getElementById("result").innerHTML=
+    `<h2>Score: ${score}</h2>`+output+`<p>${msg}</p>`;
+}
+</script>
+
+</body>
+  </html>
